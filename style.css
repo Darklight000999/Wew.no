@@ -1,5 +1,5 @@
 /* =========================================================
-   GLOBAL VARIABLES & RESET (DARK MODE - UNTOUCHED)
+   GLOBAL VARIABLES & RESET (DARK MODE)
    ========================================================= */
 :root {
   --black: #020204;
@@ -17,7 +17,6 @@
   --text: #f4f1e9;
   --border: rgba(212, 175, 55, 0.20);
   --shadow: rgba(0, 0, 0, 0.60);
-  --red-line: rgba(139, 0, 0, 0.5);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,7 +35,32 @@ button, input, textarea, select { font: inherit; }
 button, a { cursor: none; }
 
 /* =========================================================
-   APPLE LIQUID MORPHIC GLASS (LIGHT MODE FIXES)
+   1. VIDEO BACKGROUND & 2. 3D SOLAR SYSTEM
+   ========================================================= */
+#bgVideo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -3; /* सबसे पीछे वीडियो */
+  transform: translateX(-50%) translateY(-50%);
+  opacity: 0.35; /* डार्क मोड में वीडियो हल्का दिखेगा */
+  object-fit: cover;
+  transition: opacity 0.8s ease;
+}
+#threeCanvas { 
+  position: fixed; 
+  inset: 0; 
+  z-index: -2; /* वीडियो के ऊपर 3D सौरमंडल */
+  opacity: 1; 
+  transition: filter 0.8s ease, opacity 0.8s ease; 
+}
+
+/* =========================================================
+   APPLE LIQUID MORPHIC GLASS (LIGHT MODE)
    ========================================================= */
 body.light-mode {
   --bg: #f5f5f7;            
@@ -46,26 +70,24 @@ body.light-mode {
   --crimson: #ff3b30;
   --border: rgba(255, 255, 255, 0.6);
   --shadow: rgba(0, 0, 0, 0.04);
-  background: var(--bg);
+  background: transparent;
 }
 
-/* Frosted Glass Overlay (यह 3D स्पेस को धुंधला करेगा ताकि टेक्स्ट साफ दिखे) */
+/* लाइट मोड में धुंधला शीशा (Frosted Glass Overlay) जो टेक्स्ट को विजिबल बनाएगा */
 body.light-mode::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(245, 245, 247, 0.75); /* White wash */
-  backdrop-filter: blur(25px) saturate(150%);
-  -webkit-backdrop-filter: blur(25px) saturate(150%);
+  background: rgba(245, 245, 247, 0.65); /* White wash */
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
   transition: opacity 0.8s ease;
 }
 
-/* 3D Canvas - No invert, let the real colors glow behind the glass */
-body.light-mode #threeCanvas {
-  opacity: 1;
-  filter: none;
-}
+/* लाइट मोड में वीडियो और 3D फुल ब्राइटनेस में दिखेंगे, पर शीशे के पीछे */
+body.light-mode #bgVideo { opacity: 0.8; }
+body.light-mode #threeCanvas { opacity: 0.9; filter: none; }
 body.light-mode #vignette, body.light-mode #noise { display: none; }
 
 /* FIX: TEXT VISIBILITY IN LIGHT MODE */
@@ -74,10 +96,7 @@ body.light-mode .section-description,
 body.light-mode .hero-sub, 
 body.light-mode .contact-note, 
 body.light-mode .operation-desc, 
-body.light-mode .vault-sub { 
-  color: #444444 !important; 
-  font-weight: 500;
-}
+body.light-mode .vault-sub { color: #444444 !important; font-weight: 500; }
 body.light-mode .warning { color: #d20a0a !important; font-weight: 600; }
 body.light-mode #terminal { color: #333333 !important; border-color: rgba(0,0,0,0.1); }
 body.light-mode .boot-code { color: #555555 !important; }
@@ -96,102 +115,77 @@ body.light-mode #menuOverlay {
   border-radius: 24px; 
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
-body.light-mode .operation-card::before, 
-body.light-mode .operation-card::after,
-body.light-mode .vault-frame::before, 
-body.light-mode .vault-frame::after {
-  display: none;
-}
-
+body.light-mode .operation-card::before, body.light-mode .operation-card::after,
+body.light-mode .vault-frame::before, body.light-mode .vault-frame::after { display: none; }
 body.light-mode .operation-card:hover {
   background: rgba(255, 255, 255, 0.8) !important;
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 25px 60px rgba(0, 113, 227, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Header Glassmorphism */
+/* =========================================================
+   HEADER LOGO & NAVIGATION
+   ========================================================= */
+header { 
+  position: fixed; top: 0; left: 0; right: 0; z-index: 800; height: 88px; 
+  display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; 
+  background: linear-gradient(to bottom, rgba(2,2,4,0.96), rgba(2,2,4,0.22), transparent); 
+  backdrop-filter: blur(10px); transition: all 0.5s ease; 
+}
 body.light-mode header {
   background: rgba(255, 255, 255, 0.4) !important;
   backdrop-filter: blur(25px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 }
+
+.logo { 
+  display: flex; align-items: center; gap: 12px;
+  font-family: "Cinzel", serif; font-size: 18px; letter-spacing: 4px; 
+  color: var(--silver); text-shadow: 0 0 18px rgba(212,175,55,0.12); transition: color 0.3s; 
+}
+.header-logo-img { height: 38px; width: auto; object-fit: contain; transition: filter 0.5s ease; }
+.logo span { color: var(--gold); }
 body.light-mode .logo { text-shadow: none; color: #1d1d1f; }
 body.light-mode .logo span { color: #0071e3; }
+body.light-mode .header-logo-img { filter: invert(1); } /* लोगो को लाइट मोड में डार्क करता है */
 
 /* Forms & Inputs */
 body.light-mode input, body.light-mode textarea, body.light-mode select {
-  background: rgba(255, 255, 255, 0.7) !important;
-  color: #111111 !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.7) !important; color: #111111 !important; border: 1px solid rgba(0, 0, 0, 0.1) !important; border-radius: 12px; backdrop-filter: blur(10px);
 }
 body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus {
-  background: #ffffff !important;
-  border-color: #0071e3 !important;
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2) !important;
-  outline: none;
+  background: #ffffff !important; border-color: #0071e3 !important; box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2) !important; outline: none;
 }
 body.light-mode .field label { color: #555555; font-weight: 600; }
 
 /* Buttons */
 body.light-mode .command-btn, body.light-mode .vault-btn, body.light-mode .transmit {
-  background: rgba(255, 255, 255, 0.7);
-  color: #1d1d1f;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 30px;
-  font-weight: 600;
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.7); color: #1d1d1f; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 30px; font-weight: 600; backdrop-filter: blur(15px); transition: all 0.3s ease;
 }
 body.light-mode .command-btn:hover, body.light-mode .vault-btn:hover, body.light-mode .transmit:hover {
-  background: #0071e3;
-  color: #ffffff;
-  border-color: #0071e3;
-  box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3);
-  transform: translateY(-2px);
+  background: #0071e3; color: #ffffff; border-color: #0071e3; box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3); transform: translateY(-2px);
 }
 
 /* Typography Overrides */
 body.light-mode .hero-title { color: #1d1d1f; text-shadow: none; }
-body.light-mode .hero-title span {
-  background: linear-gradient(120deg, #0071e3, #af52de, #ff2a5f);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  animation: appleText 6s ease infinite alternate;
-}
+body.light-mode .hero-title span { background: linear-gradient(120deg, #0071e3, #af52de, #ff2a5f); -webkit-background-clip: text; background-clip: text; color: transparent; animation: appleText 6s ease infinite alternate; }
 @keyframes appleText { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 body.light-mode .section-index, body.light-mode .operation-number { color: #0071e3; font-weight: 700; }
 body.light-mode .hero-small, body.light-mode .menu-status { color: #af52de; font-weight: 600; }
 body.light-mode .menu-link { color: #555555; }
 body.light-mode .menu-link:hover { color: #1d1d1f; border-color: #0071e3; padding-left: 20px; }
 body.light-mode .hero-line { background: linear-gradient(transparent, #0071e3, transparent); box-shadow: none; }
-
-/* Vault Scan UI */
 body.light-mode .scan-icon { border-color: rgba(0,113,227,0.3); box-shadow: 0 0 30px rgba(0,113,227,0.1); border-radius: 50%; }
 body.light-mode .scan-icon::before { border-color: #0071e3; border-radius: 50%; }
 body.light-mode .scan-icon::after { background: #0071e3; box-shadow: 0 0 15px #0071e3; }
 body.light-mode #vaultMessage { color: #1d1d1f; font-weight: 600; }
-
-/* Theme Controls */
-body.light-mode #themeControls {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(25px) saturate(200%);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-}
+body.light-mode #themeControls { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(25px) saturate(200%); border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08); }
 body.light-mode .theme-btn { color: #1d1d1f; border-color: transparent; }
 body.light-mode .theme-btn:hover { background: rgba(0, 0, 0, 0.06); }
 body.light-mode .theme-btn.active { background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
 /* Custom Cursor */
-#cursor {
-  position: fixed; width: 10px; height: 10px; background: var(--crimson-bright);
-  border-radius: 50%; pointer-events: none; z-index: 10000;
-  transform: translate(-50%, -50%); box-shadow: 0 0 8px var(--crimson), 0 0 20px rgba(139, 0, 0, 0.7);
-  transition: width 0.2s ease, height 0.2s ease;
-}
+#cursor { position: fixed; width: 10px; height: 10px; background: var(--crimson-bright); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); box-shadow: 0 0 8px var(--crimson), 0 0 20px rgba(139, 0, 0, 0.7); transition: width 0.2s ease, height 0.2s ease; }
 #cursor::before, #cursor::after { content: ""; position: absolute; background: rgba(212, 175, 55, 0.5); }
 #cursor::before { width: 28px; height: 1px; left: -9px; top: 4px; }
 #cursor::after { width: 1px; height: 28px; left: 4px; top: -9px; }
@@ -201,16 +195,8 @@ body.light-mode #cursor::before, body.light-mode #cursor::after { background: #0
 body.light-mode.cursor-hover #cursor { border-color: #0071e3; }
 
 /* Default Effects & Sections */
-#noise {
-  position: fixed; inset: 0; z-index: 999; pointer-events: none; opacity: 0.022;
-  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 3px);
-  mix-blend-mode: screen;
-}
-#vignette {
-  position: fixed; inset: 0; z-index: 998; pointer-events: none;
-  background: radial-gradient(circle at center, transparent 28%, rgba(0,0,0,0.62) 100%);
-}
-#threeCanvas { position: fixed; inset: 0; z-index: -2; opacity: 1; transition: filter 0.8s ease, opacity 0.8s ease; }
+#noise { position: fixed; inset: 0; z-index: 999; pointer-events: none; opacity: 0.022; background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 3px); mix-blend-mode: screen; }
+#vignette { position: fixed; inset: 0; z-index: 998; pointer-events: none; background: radial-gradient(circle at center, transparent 28%, rgba(0,0,0,0.62) 100%); }
 
 /* BOOT SCREEN */
 #bootScreen { position: fixed; inset: 0; z-index: 9000; background: #000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease, visibility 1s ease; }
@@ -230,10 +216,6 @@ body.light-mode.cursor-hover #cursor { border-color: #0071e3; }
 #terminal { height: 90px; padding: 12px; text-align: left; overflow: hidden; color: #bbb; font-size: 10px; line-height: 1.7; border-top: 1px solid rgba(139,0,0,0.25); }
 .green { color: #a7ffaf; } .red { color: #ff3535; }
 
-/* HEADER */
-header { position: fixed; top: 0; left: 0; right: 0; z-index: 800; height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; background: linear-gradient(to bottom, rgba(2,2,4,0.96), rgba(2,2,4,0.22), transparent); backdrop-filter: blur(10px); transition: all 0.5s ease; }
-.logo { font-family: "Cinzel", serif; font-size: 18px; letter-spacing: 4px; color: var(--silver); text-shadow: 0 0 18px rgba(212,175,55,0.12); transition: color 0.3s; }
-.logo span { color: var(--gold); }
 .command-btn { border: 1px solid var(--line); background: rgba(5,5,5,0.7); color: var(--silver); padding: 13px 20px; font-size: 10px; letter-spacing: 2px; transition: 0.3s ease; }
 .command-btn:hover { border-color: var(--crimson); color: var(--gold); box-shadow: 0 0 25px rgba(139,0,0,0.18); }
 
@@ -363,7 +345,7 @@ footer { position: relative; z-index: 3; padding: 60px 7vw; border-top: 1px soli
 
 /* RESPONSIVE */
 @media (max-width: 1100px) { header { padding-left: 22px !important; padding-right: 22px !important; } .hero-title { font-size: clamp(44px, 8vw, 92px) !important; } }
-@media (max-width: 800px) { body { cursor: auto; } #cursor { display: none; } button, a { cursor: pointer; } section { padding: 120px 6vw; } .operations-grid { grid-template-columns: 1fr; } .contact-layout { grid-template-columns: 1fr; gap: 40px; } .dashboard-grid { grid-template-columns: 1fr; } footer { flex-direction: column; align-items: flex-start; } #threeCanvas { opacity: 0.62; } .hero-title { animation: none; } }
+@media (max-width: 800px) { body { cursor: auto; } #cursor { display: none; } button, a { cursor: pointer; } section { padding: 120px 6vw; } .operations-grid { grid-template-columns: 1fr; } .contact-layout { grid-template-columns: 1fr; gap: 40px; } .dashboard-grid { grid-template-columns: 1fr; } footer { flex-direction: column; align-items: flex-start; } .hero-title { animation: none; } }
 @media (max-width: 760px) { header { padding: 14px 16px !important; } .logo { font-size: 15px !important; } .hero-title { font-size: clamp(38px, 12vw, 70px) !important; line-height: 0.94 !important; } .hero-subtitle { font-size: 11px !important; line-height: 1.6 !important; } .operation-card { padding: 22px !important; } #themeControls { right: 12px; bottom: 12px; } .theme-btn { width: 36px; height: 36px; } .social-dynamic { padding: 12px; } select[multiple] { min-height: 88px; } }
 @media (max-width: 420px) { .hero-title { font-size: 38px !important; } #themeControls { transform: scale(0.92); transform-origin: right bottom; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
