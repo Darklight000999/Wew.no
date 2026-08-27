@@ -4,1476 +4,148 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050505" />
-  <meta
-    name="description"
-    content="darklight000999 — Absolute Digital Defense for the 0.01%."
-  />
+  <meta name="description" content="darklight000999 — Absolute Digital Defense for the 0.01%." />
 
   <title>darklight000999 — WE PROTECT THE UNSEEN</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <style>
-    /* =========================================================
-       DARKLIGHT000999
-       SINGLE FILE WEBSITE
-       ========================================================= */
-
-    :root {
-      --black: #050505;
-      --black-2: #080808;
-      --crimson: #8b0000;
-      --crimson-bright: #b30000;
-      --gold: #d4af37;
-      --silver: #f4f4f4;
-      --muted: #777;
-      --line: rgba(212, 175, 55, 0.22);
-      --red-line: rgba(139, 0, 0, 0.5);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--black);
-    }
-
-    body {
-      background: var(--black);
-      color: var(--silver);
-      font-family: "Roboto Mono", monospace;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    body.locked {
-      overflow: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    button,
-    a {
-      cursor: none;
-    }
-
-    /* =========================================================
-       CUSTOM CURSOR
-       ========================================================= */
-
-    #cursor {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: var(--crimson-bright);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 10000;
-      transform: translate(-50%, -50%);
-      box-shadow:
-        0 0 8px var(--crimson),
-        0 0 20px rgba(139, 0, 0, 0.7);
-      transition:
-        width 0.2s ease,
-        height 0.2s ease;
-    }
-
-    #cursor::before,
-    #cursor::after {
-      content: "";
-      position: absolute;
-      background: rgba(212, 175, 55, 0.5);
-    }
-
-    #cursor::before {
-      width: 28px;
-      height: 1px;
-      left: -9px;
-      top: 4px;
-    }
-
-    #cursor::after {
-      width: 1px;
-      height: 28px;
-      left: 4px;
-      top: -9px;
-    }
-
-    body.cursor-hover #cursor {
-      width: 18px;
-      height: 18px;
-      background: transparent;
-      border: 1px solid var(--gold);
-    }
-
-    /* =========================================================
-       GLOBAL EFFECTS
-       ========================================================= */
-
-    #noise {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      pointer-events: none;
-      opacity: 0.035;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255,255,255,0.05) 0,
-          rgba(255,255,255,0.05) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      mix-blend-mode: screen;
-    }
-
-    #vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 998;
-      pointer-events: none;
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 35%,
-          rgba(0,0,0,0.45) 100%
-        );
-    }
-
-    /* =========================================================
-       BOOT / DECRYPT SCREEN
-       ========================================================= */
-
-    #bootScreen {
-      position: fixed;
-      inset: 0;
-      z-index: 9000;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition:
-        opacity 1s ease,
-        visibility 1s ease;
-    }
-
-    #bootScreen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .boot-inner {
-      width: min(90%, 760px);
-      text-align: center;
-    }
-
-    .boot-code {
-      min-height: 25px;
-      margin-bottom: 30px;
-      color: #777;
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    #decryptButton {
-      position: relative;
-      border: 0;
-      background: transparent;
-      color: var(--crimson-bright);
-      font-family: "Roboto Mono", monospace;
-      font-size: clamp(13px, 2vw, 18px);
-      letter-spacing: 4px;
-      padding: 22px 30px;
-      animation: blink 1.2s infinite;
-    }
-
-    #decryptButton::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(139,0,0,0.45);
-      box-shadow:
-        0 0 30px rgba(139,0,0,0.08),
-        inset 0 0 30px rgba(139,0,0,0.04);
-    }
-
-    #decryptButton:hover {
-      color: #ff2020;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    #bootVisual {
-      display: none;
-      height: 300px;
-      position: relative;
-      margin-bottom: 20px;
-      overflow: hidden;
-      border: 1px solid rgba(212,175,55,0.12);
-      background:
-        radial-gradient(circle, rgba(139,0,0,0.14), transparent 55%),
-        #020202;
-    }
-
-    #bootVisual.active {
-      display: block;
-    }
-
-    .wire-face {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 150px;
-      height: 190px;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(212,175,55,0.4);
-      clip-path: polygon(
-        50% 0,
-        78% 12%,
-        94% 37%,
-        88% 75%,
-        65% 100%,
-        35% 100%,
-        12% 75%,
-        6% 37%,
-        22% 12%
-      );
-      box-shadow:
-        0 0 40px rgba(212,175,55,0.12),
-        inset 0 0 30px rgba(139,0,0,0.1);
-    }
-
-    .wire-face::before {
-      content: "";
-      position: absolute;
-      left: 20%;
-      right: 20%;
-      top: 38%;
-      height: 1px;
-      background: var(--crimson-bright);
-      box-shadow:
-        0 18px 0 rgba(212,175,55,0.5),
-        0 36px 0 rgba(212,175,55,0.25);
-    }
-
-    .scanner {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 2px;
-      background: #ff0000;
-      box-shadow:
-        0 0 15px #ff0000,
-        0 0 35px #8b0000;
-      animation: scan 1.5s linear infinite;
-    }
-
-    @keyframes scan {
-      0% { top: 0; }
-      100% { top: 100%; }
-    }
-
-    #terminal {
-      height: 90px;
-      padding: 12px;
-      text-align: left;
-      overflow: hidden;
-      color: #bbb;
-      font-size: 10px;
-      line-height: 1.7;
-      border-top: 1px solid rgba(139,0,0,0.25);
-    }
-
-    .green {
-      color: #a7ffaf;
-    }
-
-    .red {
-      color: #ff3535;
-    }
-
-    /* =========================================================
-       HEADER
-       ========================================================= */
-
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 800;
-      height: 88px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 5vw;
-      background: linear-gradient(
-        to bottom,
-        rgba(5,5,5,0.95),
-        rgba(5,5,5,0)
-      );
-    }
-
-    .logo {
-      font-family: "Cinzel", serif;
-      font-size: 17px;
-      letter-spacing: 4px;
-      color: var(--silver);
-    }
-
-    .logo span {
-      color: var(--gold);
-    }
-
-    .command-btn {
-      border: 1px solid var(--line);
-      background: rgba(5,5,5,0.7);
-      color: var(--silver);
-      padding: 13px 20px;
-      font-size: 10px;
-      letter-spacing: 2px;
-      transition: 0.3s ease;
-    }
-
-    .command-btn:hover {
-      border-color: var(--crimson);
-      color: var(--gold);
-      box-shadow: 0 0 25px rgba(139,0,0,0.18);
-    }
-
-    /* =========================================================
-       MENU
-       ========================================================= */
-
-    #menuOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 700;
-      background: rgba(2,2,2,0.98);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.5s ease;
-    }
-
-    #menuOverlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .menu-inner {
-      width: min(800px, 90%);
-    }
-
-    .menu-status {
-      color: var(--crimson-bright);
-      font-size: 9px;
-      letter-spacing: 3px;
-      margin-bottom: 45px;
-    }
-
-    .menu-link {
-      display: block;
-      padding: 22px 0;
-      border-bottom: 1px solid rgba(212,175,55,0.12);
-      font-family: "Cinzel", serif;
-      font-size: clamp(24px, 4vw, 48px);
-      color: #aaa;
-      transition: 0.35s ease;
-    }
-
-    .menu-link:hover {
-      color: var(--gold);
-      padding-left: 20px;
-      border-color: var(--crimson);
-    }
-
-    /* =========================================================
-       THREE.JS CANVAS
-       ========================================================= */
-
-    #threeCanvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.55;
-    }
-
-    /* =========================================================
-       MAIN
-       ========================================================= */
-
-    main {
-      position: relative;
-      z-index: 2;
-    }
-
-    section {
-      position: relative;
-      min-height: 100vh;
-      padding: 140px 7vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    /* =========================================================
-       HERO
-       ========================================================= */
-
-    #home {
-      overflow: hidden;
-      text-align: center;
-      align-items: center;
-    }
-
-    .hero-small {
-      color: var(--crimson-bright);
-      font-size: 10px;
-      letter-spacing: 5px;
-      margin-bottom: 25px;
-      opacity: 0.9;
-    }
-
-    .hero-title {
-      max-width: 1100px;
-      font-family: "Cinzel", serif;
-      font-weight: 500;
-      font-size: clamp(48px, 9vw, 125px);
-      line-height: 0.92;
-      letter-spacing: -2px;
-      color: var(--silver);
-      text-shadow:
-        0 0 40px rgba(255,255,255,0.03);
-    }
-
-    .hero-title span {
-      color: var(--gold);
-    }
-
-    .hero-sub {
-      max-width: 650px;
-      margin-top: 35px;
-      color: #888;
-      font-size: 11px;
-      letter-spacing: 3px;
-      line-height: 2;
-    }
-
-    .hero-line {
-      width: 1px;
-      height: 90px;
-      margin-top: 50px;
-      background: linear-gradient(
-        transparent,
-        var(--crimson),
-        transparent
-      );
-    }
-
-    /* =========================================================
-       SECTION HEADERS
-       ========================================================= */
-
-    .section-index {
-      color: var(--crimson-bright);
-      font-size: 9px;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-family: "Cinzel", serif;
-      font-size: clamp(35px, 5vw, 70px);
-      font-weight: 500;
-      margin-bottom: 25px;
-    }
-
-    .section-description {
-      max-width: 700px;
-      color: #777;
-      font-size: 12px;
-      line-height: 2.1;
-    }
-
-    /* =========================================================
-       MANIFESTO
-       ========================================================= */
-
-    #manifesto {
-      min-height: 80vh;
-    }
-
-    .manifesto-content {
-      max-width: 1050px;
-    }
-
-    .manifesto-quote {
-      margin-top: 50px;
-      font-family: "Cinzel", serif;
-      font-size: clamp(25px, 4vw, 48px);
-      line-height: 1.35;
-      color: #ddd;
-    }
-
-    .manifesto-quote::before {
-      content: "“";
-      color: var(--crimson);
-      font-size: 80px;
-      line-height: 0;
-      vertical-align: -25px;
-      margin-right: 12px;
-    }
-
-    /* =========================================================
-       OPERATIONS
-       ========================================================= */
-
-    #operations {
-      min-height: 100vh;
-    }
-
-    .operations-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 60px;
-      max-width: 1100px;
-    }
-
-    .operation-card {
-      position: relative;
-      min-height: 260px;
-      padding: 35px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,0.015),
-          rgba(139,0,0,0.025)
-        );
-      border: 1px solid rgba(212,175,55,0.13);
-      overflow: hidden;
-      transition: 0.4s ease;
-    }
-
-    .operation-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 1px solid transparent;
-      transition: 0.4s ease;
-    }
-
-    .operation-card:hover {
-      transform: translateY(-7px);
-      border-color: rgba(139,0,0,0.7);
-      box-shadow:
-        0 20px 70px rgba(0,0,0,0.7),
-        0 0 35px rgba(139,0,0,0.08);
-    }
-
-    .operation-card:hover::before {
-      border-color: rgba(212,175,55,0.18);
-    }
-
-    .operation-number {
-      color: var(--gold);
-      font-size: 10px;
-      letter-spacing: 2px;
-    }
-
-    .operation-title {
-      margin-top: 50px;
-      font-family: "Cinzel", serif;
-      font-size: 24px;
-      line-height: 1.2;
-    }
-
-    .operation-desc {
-      margin-top: 18px;
-      color: #777;
-      font-size: 10px;
-      line-height: 1.8;
-    }
-
-    /* =========================================================
-       VAULT
-       ========================================================= */
-
-    #vault {
-      text-align: center;
-      align-items: center;
-    }
-
-    .vault-frame {
-      width: min(600px, 100%);
-      padding: 55px 35px;
-      border: 1px solid rgba(212,175,55,0.2);
-      background: rgba(0,0,0,0.45);
-      position: relative;
-    }
-
-    .vault-frame::before,
-    .vault-frame::after {
-      content: "";
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      border-color: var(--crimson);
-      border-style: solid;
-    }
-
-    .vault-frame::before {
-      top: -1px;
-      left: -1px;
-      border-width: 1px 0 0 1px;
-    }
-
-    .vault-frame::after {
-      right: -1px;
-      bottom: -1px;
-      border-width: 0 1px 1px 0;
-    }
-
-    .scan-icon {
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 35px;
-      border: 1px solid rgba(212,175,55,0.5);
-      border-radius: 50%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: pulseScan 2.5s infinite;
-    }
-
-    .scan-icon::before {
-      content: "";
-      width: 80px;
-      height: 100px;
-      border: 1px solid rgba(139,0,0,0.8);
-      border-radius: 48% 48% 45% 45%;
-      box-shadow:
-        0 0 30px rgba(139,0,0,0.25);
-    }
-
-    .scan-icon::after {
-      content: "";
-      position: absolute;
-      left: 15px;
-      right: 15px;
-      height: 1px;
-      background: var(--crimson-bright);
-      box-shadow: 0 0 15px red;
-      animation: fingerprintScan 1.8s linear infinite;
-    }
-
-    @keyframes pulseScan {
-      0%, 100% {
-        box-shadow: 0 0 0 rgba(139,0,0,0);
-      }
-      50% {
-        box-shadow: 0 0 35px rgba(139,0,0,0.16);
-      }
-    }
-
-    @keyframes fingerprintScan {
-      0% { top: 20px; }
-      100% { top: 110px; }
-    }
-
-    .vault-title {
-      font-family: "Cinzel", serif;
-      font-size: 34px;
-      margin-bottom: 12px;
-    }
-
-    .vault-sub {
-      color: #666;
-      font-size: 10px;
-      letter-spacing: 2px;
-      margin-bottom: 35px;
-    }
-
-    .clearance-input {
-      width: 100%;
-      padding: 17px;
-      background: #020202;
-      color: var(--silver);
-      border: 1px solid rgba(212,175,55,0.22);
-      outline: none;
-      text-align: center;
-      letter-spacing: 3px;
-      transition: 0.3s;
-    }
-
-    .clearance-input:focus {
-      border-color: var(--crimson);
-      box-shadow: 0 0 25px rgba(139,0,0,0.12);
-    }
-
-    .vault-btn {
-      width: 100%;
-      margin-top: 12px;
-      padding: 16px;
-      border: 1px solid var(--crimson);
-      background: transparent;
-      color: var(--silver);
-      letter-spacing: 3px;
-      font-size: 10px;
-      transition: 0.3s;
-    }
-
-    .vault-btn:hover {
-      background: var(--crimson);
-      box-shadow: 0 0 30px rgba(139,0,0,0.3);
-    }
-
-    #vaultMessage {
-      min-height: 20px;
-      margin-top: 18px;
-      font-size: 9px;
-      letter-spacing: 2px;
-    }
-
-    /* =========================================================
-       CONTACT
-       ========================================================= */
-
-    #contact {
-      min-height: 100vh;
-    }
-
-    .contact-layout {
-      display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 80px;
-      max-width: 1100px;
-      margin-top: 60px;
-    }
-
-    .warning {
-      color: #d10000;
-      font-size: 10px;
-      line-height: 1.9;
-      letter-spacing: 1px;
-      padding-left: 15px;
-      border-left: 1px solid var(--crimson);
-    }
-
-    .contact-note {
-      margin-top: 30px;
-      color: #555;
-      font-size: 9px;
-      line-height: 2;
-    }
-
-    .terminal-form {
-      padding: 35px;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(212,175,55,0.14);
-    }
-
-    .field {
-      margin-bottom: 22px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 9px;
-      color: #777;
-      font-size: 9px;
-      letter-spacing: 2px;
-    }
-
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      background: #020202;
-      border: 1px solid rgba(212,175,55,0.15);
-      color: var(--silver);
-      padding: 15px;
-      outline: none;
-      transition: 0.3s;
-    }
-
-    .field select {
-      appearance: none;
-    }
-
-    .field textarea {
-      resize: vertical;
-      min-height: 130px;
-    }
-
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: var(--crimson);
-      box-shadow: 0 0 20px rgba(139,0,0,0.08);
-    }
-
-    .transmit {
-      width: 100%;
-      padding: 17px;
-      border: 1px solid var(--gold);
-      background: transparent;
-      color: var(--gold);
-      letter-spacing: 2px;
-      font-size: 10px;
-      transition: 0.3s;
-    }
-
-    .transmit:hover {
-      background: var(--gold);
-      color: #050505;
-    }
-
-    #formMessage {
-      margin-top: 15px;
-      text-align: center;
-      color: #9cff9c;
-      font-size: 9px;
-      letter-spacing: 2px;
-    }
-
-    /* =========================================================
-       FOOTER
-       ========================================================= */
-
-    footer {
-      position: relative;
-      z-index: 3;
-      padding: 60px 7vw;
-      border-top: 1px solid rgba(212,175,55,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 30px;
-    }
-
-    .footer-logo {
-      font-family: "Cinzel", serif;
-      letter-spacing: 3px;
-    }
-
-    .footer-copy {
-      color: #444;
-      font-size: 8px;
-      letter-spacing: 2px;
-    }
-
-    /* =========================================================
-       ACCESS GRANTED MODAL
-       ========================================================= */
-
-    #vaultDashboard {
-      position: fixed;
-      inset: 0;
-      z-index: 8500;
-      background: #020202;
-      display: none;
-      padding: 8vw;
-    }
-
-    #vaultDashboard.active {
-      display: block;
-      animation: dashboardIn 0.5s ease;
-    }
-
-    @keyframes dashboardIn {
-      from {
-        opacity: 0;
-        transform: scale(1.03);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .dashboard-top {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(212,175,55,0.18);
-      padding-bottom: 25px;
-    }
-
-    .dashboard-status {
-      color: #8cff8c;
-      font-size: 10px;
-      letter-spacing: 2px;
-    }
-
-    .close-dashboard {
-      border: 1px solid rgba(139,0,0,0.6);
-      background: transparent;
-      color: #aaa;
-      padding: 10px 15px;
-      font-size: 9px;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 35px;
-    }
-
-    .dash-card {
-      min-height: 150px;
-      padding: 25px;
-      border: 1px solid rgba(212,175,55,0.12);
-      background: #050505;
-    }
-
-    .dash-card small {
-      color: #555;
-      font-size: 8px;
-      letter-spacing: 2px;
-    }
-
-    .dash-card strong {
-      display: block;
-      margin-top: 25px;
-      font-family: "Cinzel", serif;
-      font-size: 24px;
-      color: var(--gold);
-    }
-
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
-
-    @media (max-width: 800px) {
-      body {
-        cursor: auto;
-      }
-
-      #cursor {
-        display: none;
-      }
-
-      button,
-      a {
-        cursor: pointer;
-      }
-
-      section {
-        padding: 120px 6vw;
-      }
-
-      .operations-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-layout {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
-      footer {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
-
-<style id="universe-luxury-upgrade">
-:root{
-  --black:#020204;--black-2:#05050a;--crimson:#8b0000;--crimson-bright:#d20a0a;
-  --gold:#d4af37;--gold-soft:#f1d77a;--silver:#f5f3ed;--muted:#777;
-  --line:rgba(212,175,55,.24);
-}
-body{
-  background:
-    radial-gradient(ellipse at 50% 20%,rgba(92,0,30,.16),transparent 38%),
-    radial-gradient(ellipse at 50% 100%,rgba(20,25,70,.14),transparent 45%),
-    #020204;
-}
-#threeCanvas{opacity:.82;filter:saturate(1.15) contrast(1.08);}
-#noise{opacity:.022}
-#vignette{background:radial-gradient(circle at center,transparent 28%,rgba(0,0,0,.62) 100%)}
-header{
-  background:linear-gradient(to bottom,rgba(2,2,4,.96),rgba(2,2,4,.22),transparent);
-  backdrop-filter:blur(10px);
-}
-.logo{font-size:18px;text-shadow:0 0 18px rgba(212,175,55,.12)}
-.hero-title{
-  text-shadow:0 0 60px rgba(255,255,255,.05),0 0 90px rgba(139,0,0,.10);
-  animation:heroFloat 7s ease-in-out infinite;
-}
-.hero-title span{
-  background:linear-gradient(110deg,#a77b18,#f6df80,#b88a22);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  background-size:220% auto;animation:goldFlow 5s linear infinite;
-}
-.hero-line{box-shadow:0 0 18px rgba(139,0,0,.45);animation:linePulse 2.4s ease-in-out infinite}
-.operation-card,.vault-frame,.terminal-form,.dash-card{
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.008)),
-    radial-gradient(circle at 100% 0,rgba(139,0,0,.08),transparent 45%),
-    rgba(1,1,3,.64);
-  backdrop-filter:blur(16px);
-}
-.operation-card::after{
-  content:"";position:absolute;left:-30%;top:0;width:25%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(212,175,55,.10),transparent);
-  transform:skewX(-18deg);animation:cardShimmer 5.5s ease-in-out infinite;
-}
-.operation-card:nth-child(2)::after{animation-delay:1.2s}
-.operation-card:nth-child(3)::after{animation-delay:2.4s}
-.operation-card:nth-child(4)::after{animation-delay:3.6s}
-.scan-icon{box-shadow:0 0 55px rgba(139,0,0,.10),inset 0 0 30px rgba(212,175,55,.04)}
-.vault-frame{box-shadow:0 35px 100px rgba(0,0,0,.62),0 0 80px rgba(139,0,0,.06)}
-.menu-overlay.open .menu-link{animation:menuReveal .65s both}
-.menu-overlay.open .menu-link:nth-child(3){animation-delay:.08s}
-.menu-overlay.open .menu-link:nth-child(4){animation-delay:.16s}
-.menu-overlay.open .menu-link:nth-child(5){animation-delay:.24s}
-.menu-overlay.open .menu-link:nth-child(6){animation-delay:.32s}
-@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes goldFlow{0%{background-position:0% 50%}100%{background-position:220% 50%}}
-@keyframes linePulse{0%,100%{opacity:.45;box-shadow:0 0 5px rgba(139,0,0,.1)}50%{opacity:1;box-shadow:0 0 30px rgba(139,0,0,.55)}}
-@keyframes cardShimmer{0%,65%{left:-30%}85%,100%{left:125%}}
-@keyframes menuReveal{from{opacity:0;transform:translateX(-35px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
-@media(max-width:800px){
-  #threeCanvas{opacity:.62}
-  .hero-title{animation:none}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
-}
-</style>
-
-
-<style id="darklight-v2-system">
-:root{
-  --bg:#020204; --surface:rgba(8,8,12,.72); --surface2:rgba(255,255,255,.035);
-  --text:#f4f1e9; --muted:#8e8b86; --gold:#d4af37; --crimson:#8b0000;
-  --border:rgba(212,175,55,.20); --shadow:rgba(0,0,0,.60);
-}
-body.light-mode{
-  --bg:#eef1f6; --surface:rgba(255,255,255,.76); --surface2:rgba(20,25,40,.045);
-  --text:#10131b; --muted:#555d69; --gold:#9a7414; --crimson:#8b0000;
-  --border:rgba(30,38,55,.16); --shadow:rgba(20,30,50,.18);
-}
-body{background:var(--bg);color:var(--text);transition:background .55s ease,color .45s ease}
-body.light-mode #threeCanvas{filter:invert(.84) sepia(.10) saturate(.65) brightness(1.08);opacity:.38}
-body.light-mode #noise{opacity:.012}
-body.light-mode #vignette{background:radial-gradient(circle at center,transparent 25%,rgba(210,218,230,.42) 100%)}
-body.light-mode .operation-card,
-body.light-mode .vault-frame,
-body.light-mode .terminal-form,
-body.light-mode .dash-card{
-  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(225,231,241,.60));
-  border-color:var(--border);
-  box-shadow:0 25px 70px var(--shadow);
-}
-body.light-mode .hero-title{color:#11151d;text-shadow:none}
-body.light-mode .hero-title span{
-  background:linear-gradient(110deg,#70520b,#b88b20,#76560b);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-body.light-mode .menu-overlay{background:rgba(238,241,246,.96)}
-body.light-mode input,body.light-mode textarea,body.light-mode select{
-  background:rgba(255,255,255,.78)!important;color:#111!important;border-color:rgba(20,30,50,.18)!important
-}
-#themeControls{
-  position:fixed;right:20px;bottom:20px;z-index:10000;display:flex;gap:8px;
-  padding:8px;border:1px solid var(--border);border-radius:999px;
-  background:rgba(4,4,8,.72);backdrop-filter:blur(16px);box-shadow:0 14px 40px rgba(0,0,0,.28)
-}
-body.light-mode #themeControls{background:rgba(255,255,255,.82)}
-.theme-btn{
-  width:40px;height:40px;border-radius:50%;border:1px solid var(--border);
-  background:transparent;color:var(--text);cursor:pointer;font-size:16px;
-  transition:transform .2s,background .2s,border-color .2s
-}
-.theme-btn:hover{transform:translateY(-2px);background:var(--surface2);border-color:var(--gold)}
-.theme-btn.active{box-shadow:0 0 0 1px var(--gold),0 0 18px rgba(212,175,55,.18)}
-#requestCodeBox{
-  display:none;margin-top:20px;padding:20px;border:1px solid var(--gold);
-  background:linear-gradient(145deg,rgba(212,175,55,.08),rgba(139,0,0,.08));
-  text-align:center;letter-spacing:.12em
-}
-#requestCodeBox strong{display:block;font-size:24px;color:var(--gold);margin-top:8px}
-#requestStatus{margin-top:10px;color:var(--muted);font-size:12px;letter-spacing:.08em}
-@media(max-width:1100px){
-  header{padding-left:22px!important;padding-right:22px!important}
-  .hero-title{font-size:clamp(44px,8vw,92px)!important}
-}
-@media(max-width:760px){
-  header{padding:14px 16px!important}
-  .logo{font-size:15px!important}
-  .hero-title{font-size:clamp(38px,12vw,70px)!important;line-height:.94!important}
-  .hero-subtitle{font-size:11px!important;line-height:1.6!important}
-  .operation-card{padding:22px!important}
-  #themeControls{right:12px;bottom:12px}
-  .theme-btn{width:36px;height:36px}
-}
-@media(max-width:420px){
-  .hero-title{font-size:38px!important}
-  #themeControls{transform:scale(.92);transform-origin:right bottom}
-}
-</style>
-
-
-<!--
-DARKLIGHT000999 REQUEST DELIVERY CONTRACT
-POST /api/requests
-JSON:
-{
-  "requestCode": "DL-YYYY-XXXXXX",
-  "alias": "...",
-  "communicationProtocol": "...",
-  "threatClassification": "...",
-  "situation": "..."
-}
-Server responsibilities:
-1) Validate/sanitize fields.
-2) Persist request + requestCode in a private database.
-3) Send notification to darklight000999.hq@gmail.com.
-4) Optionally send acknowledgement to the requester's email if collected.
-5) Never expose SMTP/API secrets in this HTML.
--->
-
-
-<style id="darklight-v4-form">
-.field-hint{
-  margin-top:8px;font-size:10px;line-height:1.5;letter-spacing:.08em;
-  color:var(--muted);text-transform:uppercase;
-}
-#socialFields{display:grid;gap:14px}
-.social-dynamic{
-  padding:14px 16px;border:1px solid var(--border);
-  background:var(--surface2);animation:menuReveal .35s ease both;
-}
-.social-dynamic label{
-  display:block;margin-bottom:8px;font-size:10px;letter-spacing:.12em;
-  color:var(--muted);
-}
-.social-dynamic input{width:100%}
-select[multiple]{min-height:96px}
-@media(max-width:760px){
-  .social-dynamic{padding:12px}
-  select[multiple]{min-height:88px}
-}
-</style>
-
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="locked">
 
-  <!-- Custom cursor -->
   <div id="cursor"></div>
 
-  <!-- Effects -->
   <div id="noise"></div>
   <div id="vignette"></div>
 
-  <!-- =======================================================
-       BOOT SCREEN
-       ======================================================== -->
-
   <div id="bootScreen">
-
     <div class="boot-inner">
-
       <div class="boot-code" id="bootCode">
         SECURE CHANNEL // WAITING FOR AUTHORIZATION
       </div>
-
-      <button id="decryptButton">
-        [ CLICK TO DECRYPT PROTOCOL ]
-      </button>
-
+      <button id="decryptButton">[ CLICK TO DECRYPT PROTOCOL ]</button>
       <div id="bootVisual">
-
         <div class="wire-face">
           <div class="scanner"></div>
         </div>
-
       </div>
-
       <div id="terminal"></div>
-
     </div>
-
   </div>
-
-  <!-- =======================================================
-       THREE.JS BACKGROUND
-       ======================================================== -->
 
   <canvas id="threeCanvas"></canvas>
 
-  <!-- =======================================================
-       HEADER
-       ======================================================== -->
-
   <header>
-
     <a href="#home" class="logo hover-target">
       darklight<span>000999</span>
     </a>
-
     <button class="command-btn hover-target" id="menuButton">
       [ COMMAND CENTER ]
     </button>
-
   </header>
 
-  <!-- =======================================================
-       MENU OVERLAY
-       ======================================================== -->
-
   <div id="menuOverlay">
-
     <div class="menu-inner">
-
       <div class="menu-status">
         COMMAND INTERFACE // SECURE
       </div>
-
-      <a class="menu-link hover-target" href="#home">
-        [01] THE MANIFESTO
-      </a>
-
-      <a class="menu-link hover-target" href="#operations">
-        [02] OPERATIONS
-      </a>
-
-      <a class="menu-link hover-target" href="#vault">
-        [03] THE VAULT
-      </a>
-
-      <a class="menu-link hover-target" href="#contact">
-        [04] INITIATE CONTACT
-      </a>
-
+      <a class="menu-link hover-target" href="#home">[01] THE MANIFESTO</a>
+      <a class="menu-link hover-target" href="#operations">[02] OPERATIONS</a>
+      <a class="menu-link hover-target" href="#vault">[03] THE VAULT</a>
+      <a class="menu-link hover-target" href="#contact">[04] INITIATE CONTACT</a>
     </div>
-
   </div>
 
-  <!-- =======================================================
-       MAIN
-       ======================================================== -->
-
   <main>
-
-    <!-- HOME -->
-
     <section id="home">
-
       <div class="hero-small">
         PRIVATE DIGITAL INTELLIGENCE // EST. 000999
       </div>
-
       <h1 class="hero-title">
         WE PROTECT<br />
         THE <span>UNSEEN.</span>
       </h1>
-
       <p class="hero-sub">
         ABSOLUTE DIGITAL DEFENSE FOR THE 0.01%.
         <br />
         PRIVATE. TACTICAL. INVISIBLE.
       </p>
-
       <div class="hero-line"></div>
-
     </section>
 
-
-    <!-- MANIFESTO -->
-
     <section id="manifesto">
-
       <div class="manifesto-content">
-
-        <div class="section-index">
-          [01] // THE MANIFESTO
-        </div>
-
-        <h2 class="section-title">
-          Not IT.<br />
-          Intelligence.
-        </h2>
-
+        <div class="section-index">[01] // THE MANIFESTO</div>
+        <h2 class="section-title">Not IT.<br />Intelligence.</h2>
         <p class="section-description">
           We operate outside the conventional security model.
           No mass-market solutions. No unnecessary exposure.
           No public-facing dependency.
         </p>
-
         <div class="manifesto-quote">
           We are a private digital intelligence army for the
           global elite. We guard your assets, privacy,
           infrastructure and reputation.
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- OPERATIONS -->
-
     <section id="operations">
-
-      <div class="section-index">
-        [02] // OPERATIONS
-      </div>
-
-      <h2 class="section-title">
-        Strategic Capabilities
-      </h2>
-
+      <div class="section-index">[02] // OPERATIONS</div>
+      <h2 class="section-title">Strategic Capabilities</h2>
       <p class="section-description">
         Four specialized operational divisions engineered
         for high-value individuals and critical digital
         infrastructure.
       </p>
-
       <div class="operations-grid">
-
         <article class="operation-card hover-target">
-
-          <div class="operation-number">
-            OPERATION 01
-          </div>
-
-          <h3 class="operation-title">
-            Identity &amp;<br />
-            Perception Management
-          </h3>
-
+          <div class="operation-number">OPERATION 01</div>
+          <h3 class="operation-title">Identity &amp;<br />Perception Management</h3>
           <p class="operation-desc">
             Account recovery, digital identity protection,
             reputation architecture and defensive PR engineering.
           </p>
-
         </article>
-
-
         <article class="operation-card hover-target">
-
-          <div class="operation-number">
-            OPERATION 02
-          </div>
-
-          <h3 class="operation-title">
-            Secure Architecture<br />
-            Provisioning
-          </h3>
-
+          <div class="operation-number">OPERATION 02</div>
+          <h3 class="operation-title">Secure Architecture<br />Provisioning</h3>
           <p class="operation-desc">
             Custom encrypted web platforms, applications,
             private infrastructure and security-first architecture.
           </p>
-
         </article>
-
-
         <article class="operation-card hover-target">
-
-          <div class="operation-number">
-            OPERATION 03
-          </div>
-
-          <h3 class="operation-title">
-            Tactical Cyber<br />
-            Defense
-          </h3>
-
+          <div class="operation-number">OPERATION 03</div>
+          <h3 class="operation-title">Tactical Cyber<br />Defense</h3>
           <p class="operation-desc">
             Authorized penetration testing, vulnerability
             assessment, bug hunting and defensive security operations.
           </p>
-
         </article>
-
-
         <article class="operation-card hover-target">
-
-          <div class="operation-number">
-            OPERATION 04
-          </div>
-
-          <h3 class="operation-title">
-            Cognitive Security<br />
-            Systems
-          </h3>
-
+          <div class="operation-number">OPERATION 04</div>
+          <h3 class="operation-title">Cognitive Security<br />Systems</h3>
           <p class="operation-desc">
             AI-assisted monitoring, synthetic-media detection,
             deepfake forensics and defensive intelligence.
           </p>
-
         </article>
-
       </div>
-
     </section>
 
-
-    <!-- VAULT -->
-
     <section id="vault">
-
-      <div class="section-index">
-        [03] // THE VAULT
-      </div>
-
+      <div class="section-index">[03] // THE VAULT</div>
       <div class="vault-frame">
-
         <div class="scan-icon"></div>
-
-        <h2 class="vault-title">
-          Secure Vault
-        </h2>
-
-        <p class="vault-sub">
-          AUTHORIZED PERSONNEL ONLY
-        </p>
-
+        <h2 class="vault-title">Secure Vault</h2>
+        <p class="vault-sub">AUTHORIZED PERSONNEL ONLY</p>
         <input
           id="clearanceKey"
           class="clearance-input"
@@ -1481,112 +153,56 @@ select[multiple]{min-height:96px}
           placeholder="ENTER SECURE CLEARANCE KEY..."
           autocomplete="off"
         />
-
-        <button id="vaultBtn" class="vault-btn hover-target">
-          [ VERIFY CLEARANCE ]
-        </button>
-
+        <button id="vaultBtn" class="vault-btn hover-target">[ VERIFY CLEARANCE ]</button>
         <div id="vaultMessage"></div>
-
       </div>
-
     </section>
 
-
-    <!-- CONTACT -->
-
     <section id="contact">
-
-      <div class="section-index">
-        [04] // INITIATE CONTACT
-      </div>
-
-      <h2 class="section-title">
-        Request Clearance
-      </h2>
-
+      <div class="section-index">[04] // INITIATE CONTACT</div>
+      <h2 class="section-title">Request Clearance</h2>
       <div class="contact-layout">
-
         <div>
-
           <div class="warning">
             STANDARD EMAILS WILL BE IGNORED.
             ONLY CLASSIFIED REQUESTS ARE PROCESSED.
           </div>
-
           <p class="contact-note">
             This channel is reserved for qualified
             individuals, organizations and authorized
             representatives requiring specialized
             digital defense or intelligence services.
           </p>
-
         </div>
-
-
         <form id="contactForm" class="terminal-form" action="https://api.web3forms.com/submit" method="POST">
-  <input type="hidden" name="access_key" value="0c885af4-113f-47d2-9beb-7a54ec68d47b">
-  <input type="hidden" name="subject" value="DARKLIGHT000999 — New Secure Request">
-  <input type="hidden" name="from_name" value="DARKLIGHT000999 Secure Request System">
-  <input type="hidden" name="request_code" id="web3RequestCode" value="">
-
-
+          <input type="hidden" name="access_key" value="0c885af4-113f-47d2-9beb-7a54ec68d47b">
+          <input type="hidden" name="subject" value="DARKLIGHT000999 — New Secure Request">
+          <input type="hidden" name="from_name" value="DARKLIGHT000999 Secure Request System">
+          <input type="hidden" name="request_code" id="web3RequestCode" value="">
 
           <div class="field">
-
-            <label for="alias">
-              DESIGNATION / ALIAS
-            </label>
-
-            <input
-              id="alias"
-              name="designation_alias"
-              type="text"
-              placeholder="YOUR CODE NAME"
-              maxlength="80"
-              required
-            />
-
+            <label for="alias">DESIGNATION / ALIAS</label>
+            <input id="alias" name="designation_alias" type="text" placeholder="YOUR CODE NAME" maxlength="80" required />
           </div>
-
 
           <div class="field">
-
-            <label for="protocol">
-              SECURE COMM PROTOCOL
-            </label>
-
-            <input
-              id="protocol"
-              name="secure_comm_protocol"
-              type="text"
-              placeholder="SIGNAL ID / PGP MAIL"
-              maxlength="120"
-              required
-            />
-
+            <label for="protocol">SECURE COMM PROTOCOL</label>
+            <input id="protocol" name="secure_comm_protocol" type="text" placeholder="SIGNAL ID / PGP MAIL" maxlength="120" required />
           </div>
-
-
 
           <div class="field">
             <label for="email">EMAIL ADDRESS</label>
-            <input id="email" name="email" type="email"
-              placeholder="YOUR SECURE EMAIL ADDRESS"
-              autocomplete="email" maxlength="160" required />
+            <input id="email" name="email" type="email" placeholder="YOUR SECURE EMAIL ADDRESS" autocomplete="email" maxlength="160" required />
           </div>
 
           <div class="field">
             <label for="mobile">MOBILE NUMBER</label>
-            <input id="mobile" name="mobile_number" type="tel"
-              placeholder="+91 XXXXXXXXXX"
-              autocomplete="tel" inputmode="tel" maxlength="25" required />
+            <input id="mobile" name="mobile_number" type="tel" placeholder="+91 XXXXXXXXXX" autocomplete="tel" inputmode="tel" maxlength="25" required />
           </div>
 
           <div class="field">
             <label for="socialSelect">ADDITIONAL CONTACT CHANNELS</label>
-            <select id="socialSelect" name="social_channels" multiple
-              aria-describedby="socialHelp">
+            <select id="socialSelect" name="social_channels" multiple aria-describedby="socialHelp">
               <option value="Telegram">Telegram</option>
               <option value="Instagram">Instagram</option>
               <option value="X">X</option>
@@ -1599,944 +215,63 @@ select[multiple]{min-height:96px}
           <div id="socialFields"></div>
 
           <div class="field">
-
-            <label for="threat">
-              NATURE OF THREAT
-            </label>
-
+            <label for="threat">NATURE OF THREAT</label>
             <select id="threat" name="nature_of_threat" required>
-
-              <option value="" disabled selected>
-                SELECT CLASSIFICATION
-              </option>
-
-              <option>
-                Identity Hack
-              </option>
-
-              <option>
-                Corp Espionage
-              </option>
-
-              <option>
-                Security Audit
-              </option>
-
-              <option>
-                Custom Infrastructure
-              </option>
-
+              <option value="" disabled selected>SELECT CLASSIFICATION</option>
+              <option>Identity Hack</option>
+              <option>Corp Espionage</option>
+              <option>Security Audit</option>
+              <option>Custom Infrastructure</option>
             </select>
-
           </div>
-
 
           <div class="field">
-
-            <label for="situation">
-              THE SITUATION
-            </label>
-
-            <textarea
-              id="situation"
-              name="situation"
-              maxlength="500"
-              placeholder="DESCRIBE THE SITUATION..."
-              required
-            ></textarea>
-
+            <label for="situation">THE SITUATION</label>
+            <textarea id="situation" name="situation" maxlength="500" placeholder="DESCRIBE THE SITUATION..." required></textarea>
           </div>
 
-
-          <button
-            class="transmit hover-target"
-            type="submit"
-          >
-            [ TRANSMIT ENCRYPTED REQUEST ]
-          </button>
-
+          <button class="transmit hover-target" type="submit">[ TRANSMIT ENCRYPTED REQUEST ]</button>
           <div id="formMessage"></div>
-
         </form>
-
       </div>
-
     </section>
-
   </main>
 
-
-  <!-- =======================================================
-       FOOTER
-       ======================================================== -->
-
   <footer>
-
-    <div class="footer-logo">
-      darklight000999
-    </div>
-
-    <div class="footer-copy">
-      PRIVATE DIGITAL INTELLIGENCE // ALL SYSTEMS NOMINAL
-    </div>
-
+    <div class="footer-logo">darklight000999</div>
+    <div class="footer-copy">PRIVATE DIGITAL INTELLIGENCE // ALL SYSTEMS NOMINAL</div>
   </footer>
 
-
-  <!-- =======================================================
-       VAULT DASHBOARD
-       ======================================================== -->
-
   <div id="vaultDashboard">
-
     <div class="dashboard-top">
-
       <div>
-        <div class="section-index">
-          CLASSIFIED // VAULT ACCESS
-        </div>
-
-        <h2 class="section-title">
-          Command Dashboard
-        </h2>
+        <div class="section-index">CLASSIFIED // VAULT ACCESS</div>
+        <h2 class="section-title">Command Dashboard</h2>
       </div>
-
-      <button
-        id="closeDashboard"
-        class="close-dashboard hover-target"
-      >
-        [ CLOSE ]
-      </button>
-
+      <button id="closeDashboard" class="close-dashboard hover-target">[ CLOSE ]</button>
     </div>
-
-
     <div class="dashboard-grid">
-
-      <div class="dash-card">
-        <small>SYSTEM STATUS</small>
-        <strong>NOMINAL</strong>
-      </div>
-
-      <div class="dash-card">
-        <small>ACTIVE OPERATIONS</small>
-        <strong>04</strong>
-      </div>
-
-      <div class="dash-card">
-        <small>THREAT LEVEL</small>
-        <strong>LOW</strong>
-      </div>
-
-      <div class="dash-card">
-        <small>AUDIT REPORTS</small>
-        <strong>12</strong>
-      </div>
-
-      <div class="dash-card">
-        <small>INFRASTRUCTURE</small>
-        <strong>SECURE</strong>
-      </div>
-
-      <div class="dash-card">
-        <small>LAST SCAN</small>
-        <strong>LIVE</strong>
-      </div>
-
+      <div class="dash-card"><small>SYSTEM STATUS</small><strong>NOMINAL</strong></div>
+      <div class="dash-card"><small>ACTIVE OPERATIONS</small><strong>04</strong></div>
+      <div class="dash-card"><small>THREAT LEVEL</small><strong>LOW</strong></div>
+      <div class="dash-card"><small>AUDIT REPORTS</small><strong>12</strong></div>
+      <div class="dash-card"><small>INFRASTRUCTURE</small><strong>SECURE</strong></div>
+      <div class="dash-card"><small>LAST SCAN</small><strong>LIVE</strong></div>
     </div>
-
   </div>
 
-
-  <script>
-    /* =========================================================
-       DARKLIGHT000999 JAVASCRIPT
-       ========================================================= */
-
-    const bootScreen = document.getElementById("bootScreen");
-    const decryptButton = document.getElementById("decryptButton");
-    const bootVisual = document.getElementById("bootVisual");
-    const terminal = document.getElementById("terminal");
-    const bootCode = document.getElementById("bootCode");
-
-    const menuButton = document.getElementById("menuButton");
-    const menuOverlay = document.getElementById("menuOverlay");
-
-    const vaultBtn = document.getElementById("vaultBtn");
-    const clearanceKey = document.getElementById("clearanceKey");
-    const vaultMessage = document.getElementById("vaultMessage");
-
-    const vaultDashboard =
-      document.getElementById("vaultDashboard");
-
-    const closeDashboard =
-      document.getElementById("closeDashboard");
-
-    const contactForm =
-      document.getElementById("contactForm");
-
-    const formMessage =
-      document.getElementById("formMessage");
-
-    /* =========================================================
-       CUSTOM CURSOR
-       ========================================================= */
-
-    const cursor = document.getElementById("cursor");
-
-    window.addEventListener("mousemove", (event) => {
-      cursor.style.left = event.clientX + "px";
-      cursor.style.top = event.clientY + "px";
-    });
-
-    document.querySelectorAll(".hover-target").forEach((el) => {
-
-      el.addEventListener("mouseenter", () => {
-        document.body.classList.add("cursor-hover");
-      });
-
-      el.addEventListener("mouseleave", () => {
-        document.body.classList.remove("cursor-hover");
-      });
-
-    });
-
-
-    /* =========================================================
-       WEB AUDIO API
-       ========================================================= */
-
-    let audioContext = null;
-
-    function createCyberSound() {
-
-      try {
-
-        audioContext =
-          new (window.AudioContext ||
-            window.webkitAudioContext)();
-
-        const now = audioContext.currentTime;
-
-        /* Bass oscillator */
-
-        const oscillator =
-          audioContext.createOscillator();
-
-        const gain =
-          audioContext.createGain();
-
-        oscillator.type = "sawtooth";
-
-        oscillator.frequency.setValueAtTime(
-          70,
-          now
-        );
-
-        oscillator.frequency.exponentialRampToValueAtTime(
-          30,
-          now + 1.2
-        );
-
-        gain.gain.setValueAtTime(
-          0.0001,
-          now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-          0.25,
-          now + 0.04
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          now + 1.5
-        );
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start(now);
-        oscillator.stop(now + 1.6);
-
-
-        /* Digital scan */
-
-        for (let i = 0; i < 12; i++) {
-
-          const osc =
-            audioContext.createOscillator();
-
-          const g =
-            audioContext.createGain();
-
-          const start =
-            now + 0.1 + i * 0.12;
-
-          osc.type = "square";
-
-          osc.frequency.value =
-            500 + Math.random() * 1200;
-
-          g.gain.setValueAtTime(
-            0.0001,
-            start
-          );
-
-          g.gain.exponentialRampToValueAtTime(
-            0.018,
-            start + 0.01
-          );
-
-          g.gain.exponentialRampToValueAtTime(
-            0.0001,
-            start + 0.05
-          );
-
-          osc.connect(g);
-          g.connect(audioContext.destination);
-
-          osc.start(start);
-          osc.stop(start + 0.06);
-
-        }
-
-      } catch (error) {
-
-        console.log("Audio unavailable.");
-
-      }
-
-    }
-
-
-    /* =========================================================
-       BOOT SEQUENCE
-       ========================================================= */
-
-    decryptButton.addEventListener("click", async () => {
-
-      decryptButton.style.display = "none";
-      bootVisual.classList.add("active");
-
-      createCyberSound();
-
-      const messages = [
-        "INITIALIZING SECURE CHANNEL...",
-        "VERIFYING CRYPTOGRAPHIC HANDSHAKE...",
-        "BYPASSING SECURITY LAYER...",
-        "SCANNING DIGITAL PERIMETER...",
-        "IDENTITY MATRIX: VERIFIED",
-        "ENCRYPTION: ACTIVE",
-        "ACCESS GRANTED"
-      ];
-
-      terminal.innerHTML = "";
-
-      for (let i = 0; i < messages.length; i++) {
-
-        await new Promise(
-          resolve => setTimeout(resolve, 420)
-        );
-
-        const line =
-          document.createElement("div");
-
-        line.textContent =
-          "> " + messages[i];
-
-        if (
-          messages[i].includes("GRANTED") ||
-          messages[i].includes("VERIFIED")
-        ) {
-          line.classList.add("green");
-        }
-
-        if (
-          messages[i].includes("BYPASSING")
-        ) {
-          line.classList.add("red");
-        }
-
-        terminal.appendChild(line);
-
-        terminal.scrollTop =
-          terminal.scrollHeight;
-      }
-
-      bootCode.textContent =
-        "PROTOCOL DECRYPTED // ACCESS GRANTED";
-
-      await new Promise(
-        resolve => setTimeout(resolve, 600)
-      );
-
-      bootScreen.classList.add("hidden");
-
-      document.body.classList.remove("locked");
-
-    });
-
-
-    /* =========================================================
-       COMMAND CENTER
-       ========================================================= */
-
-    menuButton.addEventListener("click", () => {
-
-      menuOverlay.classList.toggle("open");
-
-    });
-
-    document.querySelectorAll(".menu-link").forEach(link => {
-
-      link.addEventListener("click", () => {
-
-        menuOverlay.classList.remove("open");
-
-      });
-
-    });
-
-
-    /* =========================================================
-       VAULT
-       ========================================================= */
-
-    /*
-      DEMO ONLY
-
-      Change this value before testing.
-      Never put a real production secret in frontend JS.
-    */
-
-    const DEMO_CLEARANCE_KEY =
-      "DARKLIGHT-000999";
-
-    vaultBtn.addEventListener("click", () => {
-
-      const entered =
-        clearanceKey.value.trim();
-
-      if (!entered) {
-
-        vaultMessage.textContent =
-          "CLEARANCE KEY REQUIRED";
-
-        vaultMessage.style.color =
-          "#ff3030";
-
-        return;
-      }
-
-      if (entered === DEMO_CLEARANCE_KEY) {
-
-        vaultMessage.textContent =
-          "ACCESS GRANTED // OPENING VAULT";
-
-        vaultMessage.style.color =
-          "#9cff9c";
-
-        setTimeout(() => {
-
-          vaultDashboard.classList.add("active");
-
-        }, 700);
-
-      } else {
-
-        vaultMessage.textContent =
-          "ACCESS DENIED // INVALID CLEARANCE";
-
-        vaultMessage.style.color =
-          "#ff3030";
-
-        document.body.animate(
-          [
-            { backgroundColor: "#050505" },
-            { backgroundColor: "#450000" },
-            { backgroundColor: "#050505" }
-          ],
-          {
-            duration: 1000,
-            iterations: 1
-          }
-        );
-
-      }
-
-    });
-
-    clearanceKey.addEventListener("keydown", (event) => {
-
-      if (event.key === "Enter") {
-        vaultBtn.click();
-      }
-
-    });
-
-    closeDashboard.addEventListener("click", () => {
-
-      vaultDashboard.classList.remove("active");
-
-    });
-
-
-    /* =========================================================
-       CONTACT FORM
-       ========================================================= */
-
-    contactForm.addEventListener("submit", (event) => {
-
-      event.preventDefault();
-
-      formMessage.textContent =
-        "REQUEST ENCRYPTED // TRANSMISSION QUEUED";
-
-      contactForm.reset();
-
-      setTimeout(() => {
-
-        formMessage.textContent = "";
-
-      }, 5000);
-
-    });
-
-
-    /* =========================================================
-       THREE.JS COSMIC / UNIVERSE ENGINE
-       ========================================================= */
-
-    const canvas = document.getElementById("threeCanvas");
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x020204, 0.035);
-
-    const camera = new THREE.PerspectiveCamera(
-      58, window.innerWidth / window.innerHeight, 0.1, 1200
-    );
-    camera.position.z = 7;
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas, alpha: true, antialias: true
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // Deep-space star field
-    const starCount = window.innerWidth < 700 ? 1100 : 3200;
-    const starGeo = new THREE.BufferGeometry();
-    const starPos = new Float32Array(starCount * 3);
-    const starSize = new Float32Array(starCount);
-
-    for(let i=0;i<starCount;i++){
-      const r = 18 + Math.random()*34;
-      const theta = Math.random()*Math.PI*2;
-      const phi = Math.acos((Math.random()*2)-1);
-      starPos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-      starPos[i*3+1] = r*Math.cos(phi);
-      starPos[i*3+2] = r*Math.sin(phi)*Math.sin(theta);
-      starSize[i] = .5 + Math.random()*1.8;
-    }
-    starGeo.setAttribute("position",new THREE.BufferAttribute(starPos,3));
-    starGeo.setAttribute("size",new THREE.BufferAttribute(starSize,1));
-
-    const starMat = new THREE.PointsMaterial({
-      color:0xd4af37,size:.028,transparent:true,opacity:.72,
-      blending:THREE.AdditiveBlending,depthWrite:false
-    });
-    const stars = new THREE.Points(starGeo,starMat);
-    scene.add(stars);
-
-    // Crimson/gold cosmic dust concentrated around the core
-    const dustCount = window.innerWidth < 700 ? 650 : 1700;
-    const dustGeo = new THREE.BufferGeometry();
-    const dustPos = new Float32Array(dustCount*3);
-
-    for(let i=0;i<dustCount;i++){
-      const a=Math.random()*Math.PI*2;
-      const radius=1.8+Math.pow(Math.random(),.65)*8;
-      const y=(Math.random()-.5)*2.4*(radius/8);
-      dustPos[i*3]=Math.cos(a)*radius;
-      dustPos[i*3+1]=y;
-      dustPos[i*3+2]=Math.sin(a)*radius*.72;
-    }
-    dustGeo.setAttribute("position",new THREE.BufferAttribute(dustPos,3));
-    const dustMat=new THREE.PointsMaterial({
-      color:0x8b0000,size:.022,transparent:true,opacity:.48,
-      blending:THREE.AdditiveBlending,depthWrite:false
-    });
-    const dust=new THREE.Points(dustGeo,dustMat);
-    scene.add(dust);
-
-    // Central singularity
-    const coreGeo=new THREE.SphereGeometry(1.12,64,64);
-    const coreMat=new THREE.MeshBasicMaterial({color:0x000000});
-    const core=new THREE.Mesh(coreGeo,coreMat);
-    core.position.z=-1.7;
-    scene.add(core);
-
-    // Multiple orbital rings for a luxury sci-fi "universe" feel
-    const rings=[];
-    [
-      [1.55,0x8b0000,.030,.58],
-      [1.88,0xd4af37,.012,.32],
-      [2.25,0x8b0000,.009,.20]
-    ].forEach(([radius,color,width,opacity],idx)=>{
-      const g=new THREE.TorusGeometry(radius,width,16,180);
-      const m=new THREE.MeshBasicMaterial({color,transparent:true,opacity});
-      const r=new THREE.Mesh(g,m);
-      r.rotation.x=Math.PI/(2.1+idx*.32);
-      r.rotation.z=idx*.55;
-      r.position.z=-1.65;
-      scene.add(r); rings.push(r);
-    });
-
-    // Soft corona made from layered transparent rings
-    const corona=[];
-    for(let i=0;i<7;i++){
-      const g=new THREE.TorusGeometry(1.28+i*.055,.012,12,160);
-      const m=new THREE.MeshBasicMaterial({
-        color:i%2?0xd4af37:0x8b0000,
-        transparent:true,opacity:.055
-      });
-      const c=new THREE.Mesh(g,m);
-      c.rotation.x=Math.PI/2.25+(i*.035);
-      c.position.z=-1.62;
-      scene.add(c); corona.push(c);
-    }
-
-    let targetX=0,targetY=0,mouseX=0,mouseY=0;
-    window.addEventListener("mousemove",(e)=>{
-      targetX=(e.clientX/window.innerWidth-.5)*.7;
-      targetY=(e.clientY/window.innerHeight-.5)*.45;
-    });
-
-    function animate(){
-      requestAnimationFrame(animate);
-      mouseX += (targetX-mouseX)*.025;
-      mouseY += (targetY-mouseY)*.025;
-
-      stars.rotation.y += .00018;
-      stars.rotation.x += .000035;
-      dust.rotation.y -= .00042;
-      dust.rotation.z += .00008;
-
-      rings.forEach((r,i)=>{
-        r.rotation.z += .0008*(i%2? -1:1);
-        r.rotation.x += Math.sin(Date.now()*.0002+i)*.000025;
-      });
-      corona.forEach((c,i)=>c.rotation.z += .00025*(i%2?-1:1));
-
-      camera.position.x += (mouseX-camera.position.x)*.02;
-      camera.position.y += (-mouseY-camera.position.y)*.02;
-      camera.lookAt(0,0,-1.2);
-
-      const pulse=1+Math.sin(Date.now()*.0008)*.018;
-      core.scale.setScalar(pulse);
-
-      renderer.render(scene,camera);
-    }
-    animate();
-
-    /* =========================================================
-       RESIZE
-       ========================================================= */
-
-    window.addEventListener(
-      "resize",
-      () => {
-
-        camera.aspect =
-          window.innerWidth /
-          window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-          window.innerWidth,
-          window.innerHeight
-        );
-
-      }
-    );
-
-
-    /* =========================================================
-       PARALLAX
-       ========================================================= */
-
-    window.addEventListener(
-      "mousemove",
-      (event) => {
-
-        const x =
-          (event.clientX /
-            window.innerWidth -
-            0.5);
-
-        const y =
-          (event.clientY /
-            window.innerHeight -
-            0.5);
-
-        particles.rotation.y +=
-          x * 0.0005;
-
-        particles.rotation.x +=
-          y * 0.0003;
-
-      }
-    );
-
-
-    /* =========================================================
-       SIMPLE SCROLL REVEAL
-       ========================================================= */
-
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-
-          entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-              entry.target.style.opacity = "1";
-              entry.target.style.transform =
-                "translateY(0)";
-
-            }
-
-          });
-
-        },
-        {
-          threshold: 0.12
-        }
-      );
-
-
-    document
-      .querySelectorAll(
-        ".operation-card, .manifesto-quote, .vault-frame, .terminal-form"
-      )
-      .forEach(el => {
-
-        el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition =
-          "opacity 0.8s ease, transform 0.8s ease";
-
-        observer.observe(el);
-
-      });
-
-  </script>
-
-
-<script>
-(() => {
-  const reveal = () => {
-    document.documentElement.classList.add("universe-ready");
-  };
-  window.addEventListener("load", () => setTimeout(reveal, 250));
-})();
-</script>
-
-
-<div id="themeControls" aria-label="Display controls">
-  <button class="theme-btn active" id="darkModeBtn" title="Dark theme" aria-label="Dark theme">☾</button>
-  <button class="theme-btn" id="lightModeBtn" title="Light theme" aria-label="Light theme">☼</button>
-  <button class="theme-btn active" id="soundBtn" title="Sound on/off" aria-label="Sound on/off">◉</button>
-</div>
-
-
-<script id="darklight-v2-controls">
-(function(){
-  const body=document.body;
-  const darkBtn=document.getElementById('darkModeBtn');
-  const lightBtn=document.getElementById('lightModeBtn');
-  const soundBtn=document.getElementById('soundBtn');
-
-  function setTheme(mode){
-    body.classList.toggle('light-mode',mode==='light');
-    darkBtn.classList.toggle('active',mode!=='light');
-    lightBtn.classList.toggle('active',mode==='light');
-    localStorage.setItem('darklight-theme',mode);
-  }
-  const savedTheme=localStorage.getItem('darklight-theme') || 'dark';
-  setTheme(savedTheme);
-  darkBtn.onclick=()=>setTheme('dark');
-  lightBtn.onclick=()=>setTheme('light');
-
-  let soundOn=localStorage.getItem('darklight-sound')!=='off';
-  function updateSound(){
-    soundBtn.textContent=soundOn?'◉':'○';
-    soundBtn.classList.toggle('active',soundOn);
-    localStorage.setItem('darklight-sound',soundOn?'on':'off');
-  }
-  updateSound();
-  soundBtn.onclick=()=>{
-    soundOn=!soundOn; updateSound();
-    if(soundOn && window.__dlAudio){
-      window.__dlAudio.resume().catch(()=>{});
-    }
-  };
-
-  // Subtle UI sound system, activated only after a user gesture.
-  let audioCtx;
-  function beep(freq=660,duration=.055){
-    if(!soundOn) return;
-    try{
-      audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-      o.type='sine';o.frequency.value=freq;
-      g.gain.setValueAtTime(.0001,audioCtx.currentTime);
-      g.gain.exponentialRampToValueAtTime(.018,audioCtx.currentTime+.008);
-      g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration);
-      o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration+.01);
-      window.__dlAudio=audioCtx;
-    }catch(e){}
-  }
-  document.addEventListener('click',e=>{
-    if(e.target.closest('button,a')) beep(720,.04);
-  },{passive:true});
-
-  // Professional request reference: non-sequential and collision-resistant.
-  function requestCode(){
-    const now=new Date(), y=now.getFullYear();
-    const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let r='';
-    for(let i=0;i<6;i++) r+=chars[Math.floor(Math.random()*chars.length)];
-    return 'DL-'+y+'-'+r;
-  }
-
-  // Expose a small helper for the existing form handler to call.
-  window.generateDarklightRequestCode=function(){
-    const code=requestCode();
-    const box=document.getElementById('requestCodeBox');
-    const value=document.getElementById('requestCodeValue');
-    if(box&&value){ value.textContent=code; box.style.display='block'; }
-    return code;
-  };
-})();
-</script>
-
-
-<script>
-(function(){
-  const form=document.querySelector('form[action*="api.web3forms.com/submit"]');
-  if(!form)return;
-  function code(){
-    if(window.generateDarklightRequestCode)return window.generateDarklightRequestCode();
-    const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';
-    for(let i=0;i<6;i++)r+=c[Math.floor(Math.random()*c.length)];
-    return 'DL-'+new Date().getFullYear()+'-'+r;
-  }
-  form.addEventListener('submit',async function(e){
-    e.preventDefault();
-    const btn=form.querySelector('button[type="submit"],button');
-    const old=btn?btn.textContent:'';
-    const requestCode=code();
-    const f=form.querySelector('#web3RequestCode');
-    if(f)f.value=requestCode;
-    if(btn){btn.disabled=true;btn.textContent='TRANSMITTING…';}
-    try{
-      const r=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
-      const data=await r.json().catch(()=>({}));
-      if(!r.ok||data.success===false)throw new Error(data.message||'Transmission failed');
-      form.querySelectorAll('input:not([type="hidden"]),textarea,select').forEach(x=>x.value='');
-      const box=document.getElementById('requestCodeBox'), val=document.getElementById('requestCodeValue'), st=document.getElementById('requestStatus');
-      if(box&&val){val.textContent=requestCode;box.style.display='block';if(st)st.textContent='REQUEST RECEIVED • SECURE ACKNOWLEDGEMENT ISSUED';box.scrollIntoView({behavior:'smooth',block:'center'});}
-      else alert('REQUEST RECEIVED\nRequest Code: '+requestCode);
-    }catch(err){console.error(err);alert('Transmission could not be completed. Please try again.');}
-    finally{if(btn){btn.disabled=false;btn.textContent=old;}}
-  });
-})();
-</script>
-
-
-<script id="darklight-v4-request-details">
-(function(){
-  const form=document.getElementById('contactForm');
-  const select=document.getElementById('socialSelect');
-  const container=document.getElementById('socialFields');
-  if(!form||!select||!container)return;
-
-  const defs={
-    Telegram:{name:'telegram_username',label:'TELEGRAM USERNAME / ID',placeholder:'@USERNAME OR TELEGRAM ID'},
-    Instagram:{name:'instagram_username',label:'INSTAGRAM USERNAME',placeholder:'@USERNAME'},
-    X:{name:'x_username',label:'X USERNAME',placeholder:'@USERNAME'}
-  };
-
-  function selectedValues(){
-    return Array.from(select.selectedOptions).map(o=>o.value);
-  }
-
-  function render(){
-    const selected=selectedValues();
-    container.innerHTML='';
-    selected.forEach(key=>{
-      const d=defs[key];
-      const wrap=document.createElement('div');
-      wrap.className='social-dynamic';
-      wrap.innerHTML=
-        '<label for="'+d.name+'">'+d.label+'</label>'+
-        '<input id="'+d.name+'" name="'+d.name+'" type="text" maxlength="120" '+
-        'placeholder="'+d.placeholder+'" autocomplete="off" required>';
-      container.appendChild(wrap);
-    });
-  }
-  select.addEventListener('change',render);
-  render();
-
-  // Build a single readable message so the email contains the complete request,
-  // not only hidden fields.
-  function val(id){
-    const el=document.getElementById(id);
-    return el ? (el.value||'').trim() : '';
-  }
-  function buildMessage(code){
-    const lines=[
-      'DARKLIGHT000999 — SECURE REQUEST',
-      '=================================',
-      'REQUEST CODE: '+code,
-      '',
-      'DESIGNATION / ALIAS: '+val('alias'),
-      'EMAIL ADDRESS: '+val('email'),
-      'MOBILE NUMBER: '+val('mobile'),
-      'SECURE COMM PROTOCOL: '+val('protocol'),
-      'NATURE OF THREAT: '+val('threat'),
-      '',
-      'ADDITIONAL CONTACT CHANNELS: '+(selectedValues().join(', ')||'None'),
-      selectedValues().includes('Telegram')?'TELEGRAM: '+val('telegram_username'):'',
-      selectedValues().includes('Instagram')?'INSTAGRAM: '+val('instagram_username'):'',
-      selectedValues().includes('X')?'X: '+val('x_username'):'',
-      '',
-      'THE SITUATION:',
-      val('situation')
-    ].filter(Boolean);
-    return lines.join('\\n');
-  }
-
-  // Hook into the existing async Web3Forms handler. We add/update the message
-  // immediately before it sends FormData, without creating a second submission.
-  form.addEventListener('submit',function(){
-    let codeEl=document.getElementById('web3RequestCode');
-    const code=codeEl && codeEl.value ? codeEl.value : 
-      (window.generateDarklightRequestCode ? window.generateDarklightRequestCode() : '');
-    if(codeEl)codeEl.value=code;
-
-    let msg=form.querySelector('textarea[name="message"]');
-    if(!msg){
-      msg=document.createElement('textarea');
-      msg.name='message';msg.hidden=true;form.appendChild(msg);
-    }
-    msg.value=buildMessage(code);
-  },{capture:true});
-})();
-</script>
-
+  <div id="themeControls" aria-label="Display controls">
+    <button class="theme-btn active" id="darkModeBtn" title="Dark theme" aria-label="Dark theme">☾</button>
+    <button class="theme-btn" id="lightModeBtn" title="Light theme" aria-label="Light theme">☼</button>
+    <button class="theme-btn active" id="soundBtn" title="Sound on/off" aria-label="Sound on/off">◉</button>
+  </div>
+  
+  <div id="requestCodeBox" style="display:none;">
+    REQUEST CODE
+    <strong id="requestCodeValue"></strong>
+    <div id="requestStatus"></div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
