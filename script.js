@@ -141,156 +141,95 @@ closeDashboard.addEventListener("click", () => vaultDashboard.classList.remove("
    ========================================================= */
 const canvas = document.getElementById("threeCanvas");
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x010103, 0.02); // Deep space fog
-
+// No fog, so the background video remains perfectly visible
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-// Camera positioned to look slightly down at the solar system
 camera.position.set(0, 5, 20); 
 
+// alpha: true allows the video behind the canvas to show through!
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Lighting
-const ambientLight = new THREE.AmbientLight(0x222233); // Faint starlight
+const ambientLight = new THREE.AmbientLight(0x222233); 
 scene.add(ambientLight);
-
-const sunLight = new THREE.PointLight(0xffeedd, 3.5, 300); // Powerful light from the Sun
+const sunLight = new THREE.PointLight(0xffeedd, 3.5, 300); 
 scene.add(sunLight);
 
-// Group to hold the entire solar system (allows tilting)
 const solarSystem = new THREE.Group();
-solarSystem.rotation.x = Math.PI / 8; // Tilt 22.5 degrees for a cinematic angle
+solarSystem.rotation.x = Math.PI / 8; // Tilt
 scene.add(solarSystem);
 
 // 1. THE SUN
 const sunGeo = new THREE.SphereGeometry(2.5, 64, 64);
-const sunMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 }); // Glowing Yellow
+const sunMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 }); 
 const sun = new THREE.Mesh(sunGeo, sunMat);
 solarSystem.add(sun);
 
-// Sun's Glowing Corona (Halo)
+// Corona
 const coronaGeo = new THREE.SphereGeometry(2.9, 64, 64);
 const coronaMat = new THREE.MeshBasicMaterial({ 
-    color: 0xff6600, 
-    transparent: true, 
-    opacity: 0.3, 
-    blending: THREE.AdditiveBlending 
+    color: 0xff6600, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending 
 });
 const corona = new THREE.Mesh(coronaGeo, coronaMat);
 solarSystem.add(corona);
 
 // 2. THE PLANETS
 const planets = [];
-
 function createPlanet(radius, color, distance, speed, hasRings = false) {
-    const pivot = new THREE.Group(); // Pivot point at the center (Sun)
+    const pivot = new THREE.Group();
     solarSystem.add(pivot);
 
-    // Planet Mesh
     const geo = new THREE.SphereGeometry(radius, 32, 32);
-    // StandardMaterial interacts realistically with the Sun's light
-    const mat = new THREE.MeshStandardMaterial({ 
-        color: color, 
-        roughness: 0.6, 
-        metalness: 0.1 
-    });
+    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.6, metalness: 0.1 });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.x = distance;
     pivot.add(mesh);
 
-    // Visible Orbit Ring
     const pathGeo = new THREE.RingGeometry(distance - 0.02, distance + 0.02, 128);
-    const pathMat = new THREE.MeshBasicMaterial({ 
-        color: 0xffffff, 
-        transparent: true, 
-        opacity: 0.08, 
-        side: THREE.DoubleSide 
-    });
+    const pathMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, side: THREE.DoubleSide });
     const path = new THREE.Mesh(pathGeo, pathMat);
-    path.rotation.x = Math.PI / 2; // Lay flat
+    path.rotation.x = Math.PI / 2;
     solarSystem.add(path);
 
-    // Add rings to planet (like Saturn)
     if (hasRings) {
         const ringGeo = new THREE.RingGeometry(radius * 1.4, radius * 2.2, 64);
-        const ringMat = new THREE.MeshStandardMaterial({ 
-            color: 0xddccaa, 
-            transparent: true, 
-            opacity: 0.85, 
-            side: THREE.DoubleSide 
-        });
+        const ringMat = new THREE.MeshStandardMaterial({ color: 0xddccaa, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
         const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2.2; // Tilt ring relative to planet
+        ring.rotation.x = Math.PI / 2.2;
         mesh.add(ring);
     }
-
     planets.push({ pivot, mesh, speed });
 }
 
-// Add our planets (Radius, Color, Distance, Speed, HasRings)
-createPlanet(0.2, 0x888888, 4, 0.008);           // Mercury (Gray)
-createPlanet(0.35, 0xeebb88, 6.5, 0.006);        // Venus (Yellowish)
-createPlanet(0.4, 0x2277ff, 9.5, 0.004);         // Earth (Blue)
-createPlanet(0.25, 0xff4422, 12.5, 0.003);       // Mars (Red)
-createPlanet(1.2, 0xcc9966, 18, 0.002);          // Jupiter (Orange/Brown)
-createPlanet(0.9, 0xeaddb5, 24, 0.0015, true);   // Saturn (Pale Gold with Rings)
+createPlanet(0.2, 0x888888, 4, 0.008);           // Mercury
+createPlanet(0.35, 0xeebb88, 6.5, 0.006);        // Venus
+createPlanet(0.4, 0x2277ff, 9.5, 0.004);         // Earth
+createPlanet(0.25, 0xff4422, 12.5, 0.003);       // Mars
+createPlanet(1.2, 0xcc9966, 18, 0.002);          // Jupiter
+createPlanet(0.9, 0xeaddb5, 24, 0.0015, true);   // Saturn
 
-// 3. REALISTIC STARFIELD
-const starCount = window.innerWidth < 700 ? 2500 : 6000;
-const starGeo = new THREE.BufferGeometry();
-const starPos = new Float32Array(starCount * 3);
-
-for(let i=0; i < starCount * 3; i += 3) {
-    const r = 50 + Math.random() * 150; // Random distance far away
-    const theta = Math.random() * 2 * Math.PI;
-    const phi = Math.acos(Math.random() * 2 - 1);
-    
-    starPos[i] = r * Math.sin(phi) * Math.cos(theta);     // x
-    starPos[i+1] = r * Math.cos(phi);                     // y
-    starPos[i+2] = r * Math.sin(phi) * Math.sin(theta);   // z
-}
-starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
-
-const starMat = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.15,
-    transparent: true,
-    opacity: 0.8
-});
-const stars = new THREE.Points(starGeo, starMat);
-scene.add(stars);
-
-
-// Mouse Parallax Interaction
+// Parallax
 let targetX = 0, targetY = 0, mouseX = 0, mouseY = 0;
 window.addEventListener("mousemove", (e) => {
   targetX = (e.clientX / window.innerWidth - 0.5) * 2;
   targetY = (e.clientY / window.innerHeight - 0.5) * 1.5;
 });
 
-// Animation Loop
 function animate(){
   requestAnimationFrame(animate);
   
-  // Smooth Camera Pan
   mouseX += (targetX - mouseX) * 0.05;
   mouseY += (targetY - mouseY) * 0.05;
-  
   camera.position.x += (mouseX - camera.position.x) * 0.05;
   camera.position.y += (5 - mouseY - camera.position.y) * 0.05; 
   camera.lookAt(0, -1, 0);
 
-  // Rotate Sun Corona for dynamic effect
   corona.scale.setScalar(1 + Math.sin(Date.now() * 0.002) * 0.03);
   
-  // Very slow background star rotation
-  stars.rotation.y += 0.0001;
-
-  // Orbit Planets
   planets.forEach((p) => {
-      p.pivot.rotation.y += p.speed; // Revolve around sun
-      p.mesh.rotation.y += p.speed * 5; // Rotate on own axis
+      p.pivot.rotation.y += p.speed; 
+      p.mesh.rotation.y += p.speed * 5; 
   });
 
   renderer.render(scene, camera);
