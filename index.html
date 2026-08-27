@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +9,28 @@
 
   <title>darklight000999 — WE PROTECT THE UNSEEN</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
+  <!-- External Library (Three.js) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+  <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="locked">
 
+  <!-- Custom cursor -->
   <div id="cursor"></div>
 
+  <!-- Effects -->
   <div id="noise"></div>
   <div id="vignette"></div>
 
+  <!-- BOOT SCREEN -->
   <div id="bootScreen">
     <div class="boot-inner">
       <div class="boot-code" id="bootCode">
@@ -39,17 +46,28 @@
     </div>
   </div>
 
+  <!-- 1. VIDEO BACKGROUND (Deep Space Nebula) -->
+  <!-- यहाँ src में अपने वीडियो का लिंक डालें, या इसे ऐसे ही रहने दें -->
+  <video id="bgVideo" autoplay loop muted playsinline>
+    <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+  </video>
+
+  <!-- 2. THREE.JS SOLAR SYSTEM -->
   <canvas id="threeCanvas"></canvas>
 
+  <!-- HEADER WITH LOGO -->
   <header>
     <a href="#home" class="logo hover-target">
-      darklight<span>000999</span>
+      <!-- यहाँ logo.png की जगह अपने लोगो का नाम डालें -->
+      <img src="logo.png" alt="Darklight Logo" class="header-logo-img" onerror="this.style.display='none'">
+      <span class="logo-text">darklight<span>000999</span></span>
     </a>
     <button class="command-btn hover-target" id="menuButton">
       [ COMMAND CENTER ]
     </button>
   </header>
 
+  <!-- MENU OVERLAY -->
   <div id="menuOverlay">
     <div class="menu-inner">
       <div class="menu-status">
@@ -62,7 +80,9 @@
     </div>
   </div>
 
+  <!-- MAIN -->
   <main>
+    <!-- HOME -->
     <section id="home">
       <div class="hero-small">
         PRIVATE DIGITAL INTELLIGENCE // EST. 000999
@@ -79,6 +99,7 @@
       <div class="hero-line"></div>
     </section>
 
+    <!-- MANIFESTO -->
     <section id="manifesto">
       <div class="manifesto-content">
         <div class="section-index">[01] // THE MANIFESTO</div>
@@ -96,6 +117,7 @@
       </div>
     </section>
 
+    <!-- OPERATIONS -->
     <section id="operations">
       <div class="section-index">[02] // OPERATIONS</div>
       <h2 class="section-title">Strategic Capabilities</h2>
@@ -140,6 +162,7 @@
       </div>
     </section>
 
+    <!-- VAULT -->
     <section id="vault">
       <div class="section-index">[03] // THE VAULT</div>
       <div class="vault-frame">
@@ -158,6 +181,7 @@
       </div>
     </section>
 
+    <!-- CONTACT -->
     <section id="contact">
       <div class="section-index">[04] // INITIATE CONTACT</div>
       <h2 class="section-title">Request Clearance</h2>
@@ -237,11 +261,13 @@
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-logo">darklight000999</div>
     <div class="footer-copy">PRIVATE DIGITAL INTELLIGENCE // ALL SYSTEMS NOMINAL</div>
   </footer>
 
+  <!-- VAULT DASHBOARD -->
   <div id="vaultDashboard">
     <div class="dashboard-top">
       <div>
@@ -260,6 +286,7 @@
     </div>
   </div>
 
+  <!-- THEME CONTROLS -->
   <div id="themeControls" aria-label="Display controls">
     <button class="theme-btn active" id="darkModeBtn" title="Dark theme" aria-label="Dark theme">☾</button>
     <button class="theme-btn" id="lightModeBtn" title="Light theme" aria-label="Light theme">☼</button>
@@ -272,6 +299,8 @@
     <div id="requestStatus"></div>
   </div>
 
+  <!-- JS Script -->
   <script src="script.js"></script>
 </body>
 </html>
+```
